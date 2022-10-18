@@ -1,0 +1,168 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+    <h1>Редагування домашньої сторінки ({{locale}})</h1>
+
+    {% if not content %}
+<!--    initialize the db with fields-->
+        <p>
+            База даних порожня. Натисніть "Зберегти", щоб ініціалювати базу даних.
+        </p>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+       <input type="hidden" name="locale" value="{{locale}}">
+
+        {% for block, doc in content.items %}
+            <h2>{{block}}</h2>
+
+                {% for field, value in doc.items %}
+<!--                    Skip id fields-->
+                    {% if not field == '_id' %}
+
+<!--                        Special-case nested fields -->
+
+                        {% if block == 'block_two' and field == 'cards' %}
+                            <h3>block_two - cards</h3>
+                            {% for card in value %}
+                                <h4>id {{card.id}}</h4>
+                                    <p>icon: {{card.icon}}</p>
+                                    <input type="file" name="{{block}}__card_{{card.id}}_icon" accept="image/*">
+                                    <input type="hidden" name="{{block}}__card_{{card.id}}_icon" value="{{card.icon}}">
+                                    <p>title</p>
+                                    <input type="text" name="{{block}}__card_{{card.id}}_title" value="{{card.title}}">
+                                    <p>subtitle</p>
+                                    <input type="text" name="{{block}}__card_{{card.id}}_sub_title" value="{{card.sub_title}}">
+                            {% endfor %}
+
+                        {% elif block == 'block_seven_stats' and field == 'cards' %}
+                            <h3>block_seven_stats - cards</h3>
+                            {% for card in value %}
+                                <h4>id {{card.id}}</h4>
+                                <p>reviews</p>
+                                <input type="text" name="{{block}}__card_{{card.id}}_reviews" value="{{card.reviews}}">
+                                <p>title</p>
+                                <input type="text" name="{{block}}__card_{{card.id}}_title" value="{{card.title}}">
+                                <p>followers</p>
+                                <input type="text" name="{{block}}__card_{{card.id}}_followers" value="{{card.followers}}">
+                                <p>icon</p>
+                                <input type="file" name="{{block}}__card_{{card.id}}_icon" accept="image/*">
+                                <input type="hidden" name="{{block}}__card_{{card.id}}_icon" value="{{card.icon}}">
+                                <p>link</p>
+                                <input type="text" name="{{block}}__card_{{card.id}}_link" value="{{card.link}}">
+                            {% endfor %}
+
+                        {% elif block == 'block_seven_stats' and field == 'button' %}
+                            <h3>block_seven_stats - button</h3>
+                                <p>title</p>
+                                <input type="text" name="{{block}}__button_title" value="{{value.title}}">
+                                <p>icon</p>
+                                <input type="file" name="{{block}}__button_icon" accept="image/*">
+                                <input type="hidden" name="{{block}}__button_icon" value="{{card.icon}}"/>
+
+                        {% elif block == 'block_seven_recblog' and field == 'recommend_text' %}
+                            <h3>block_seven_recblog - recommend text</h3>
+                                <p>title</p>
+                                <input type="text" name="{{block}}__rectext_title" value="{{value.title}}">
+                                <p>link</p>
+                                <input type="text" name="{{block}}__rectext_link" value="{{value.link}}">
+                                <p>title_next</p>
+                                <input type="text" name="{{block}}__rectext_title_next" value="{{value.title_next}}">
+
+                        {% elif block == 'block_seven_jurist' and field == 'slogan' %}
+                            <h3>block_seven_jurist - slogan</h3>
+                                <p>title</p>
+                                <input type="text" name="{{block}}__slogan_title" value="{{value.title}}">
+                                <p>jurist</p>
+                                <input type="text" name="{{block}}__slogan_jurist" value="{{value.jurist}}">
+                                <p>link_title</p>
+                                <input type="text" name="{{block}}__slogan_link_title" value="{{value.link_title}}">
+                                <p>link</p>
+                                <input type="text" name="{{block}}__slogan_link" value="{{value.link}}">
+
+                        {% elif block == 'block_seven_createapp' and field == 'cards' %}
+                            <h3>block_seven_createapp - cards</h3>
+                            {% for card in value %}
+                                <h4>id {{card.id}}</h4>
+                                <p>icon</p>
+                                <input type="file" name="{{block}}__card_{{card.id}}_icon" accept="image/*">
+                                <input type="hidden" name="{{block}}__card_{{card.id}}_icon" value="{{card.icon}}">
+                                <p>title</p>
+                                <input type="text" name="{{block}}__card_{{card.id}}_title" value="{{card.title}}">
+                            {% endfor %}
+
+
+                        {% elif block == 'block_seven_createapp' and field == 'button' %}
+                            <h3>block_seven_createapp - button</h3>
+                            <p>title</p>
+                            <input type="text" name="{{block}}__button_title" value="{{value.title}}">
+                            <p>icon</p>
+                            <input type="file" name="{{block}}__button_icon" accept="image/*">
+                            <input type="hidden" name="{{block}}__button_icon" value="{{value.icon}}"/>
+                            <p>link</p>
+                            <input type="text" name="{{block}}__button_link" value="{{value.link}}">
+
+                        {% elif block == 'block_review_index' and field == 'buttonLink' %}
+                            <h3>block_review_index - button</h3>
+                            <p>title</p>
+                            <input type="text" name="{{block}}__button_title" value="{{value.title}}">
+                            <p>icon</p>
+                            <input type="file" name="{{block}}__button_icon" accept="image/*">
+                            <input type="hidden" name="{{block}}__button_icon" value="{{value.icon}}"/>
+                            <p>link</p>
+                            <input type="text" name="{{block}}__button_link" value="{{value.link}}">
+
+                        {% elif block == 'block_review_slide' and field == 'reviews' %}
+                            <h3>{{block}} - {{field}}</h3>
+                            {% for review in value %}
+                                <h4>id {{review.id}}</h4>
+                                <p>name</p>
+                                <input type="text" name="{{block}}__rev_{{review.id}}_name" value="{{review.name}}">
+                                <p>avatar</p>
+                                <input type="file" name="{{block}}__rev_{{review.id}}_avatar" accept="image/*">
+                                <input type="hidden" name="{{block}}__rev_{{review.id}}_avatar" value="{{review.avatar}}">
+                                <p>review text</p>
+                                <input type="text" name="{{block}}__rev_{{review.id}}_text" value="{{review.review_text}}">
+                            {% endfor %}
+
+                        {% elif block == 'block_faq' and field == 'questions' %}
+                            <h3>{{block}} - {{field}}</h3>
+                            {% for question in value %}
+                                <h4>id {{question.id}}</h4>
+                                <p>question</p>
+                                <input type="text" name="{{block}}__q_{{question.id}}_question" value="{{question.question}}">
+                                <p>answer</p>
+                                <input type="text" name="{{block}}__q_{{question.id}}_answer" value="{{question.answer}}">
+                            {% endfor %}
+
+
+                        {% elif block == 'block_faq' and field == 'icon_arrow' %}
+                            <h3>{{block}} - {{field}}</h3>
+                            <p>up icon</p>
+                            <input type="file" name="{{block}}__icon_arrow_up" accept="image/*">
+                            <input type="hidden" name="{{block}}__icon_arrow_up" value="{{value.up}}"/>
+                            <p>down icon</p>
+                            <input type="file" name="{{block}}__icon_arrow_down" accept="image/*">
+                            <input type="hidden" name="{{block}}__icon_arrow_down" value="{{value.down}}"/>
+
+
+<!--                        Ordinary non-nested fields (text and images) -->
+                        {% else %}
+                            <h3>{{field}}</h3>
+                                {% if not field in image_fields %}
+                                    <input type="text" name="{{block}}__{{field}}" value="{{value}}">
+                                {% else %}
+                                    <p>{{value}}</p>
+                                    <input type="file" name="{{block}}__{{field}}" accept="image/*">
+                                    <input type="hidden" name="{{block}}__{{field}}" value="{{value}}">
+                                {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            <br>
+        {% endfor %}
+        <br>
+        <input type="submit" value="Зберегти">
+    </form>
+
+{% endblock content %}
